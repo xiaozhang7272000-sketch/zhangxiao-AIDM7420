@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600&family=Noto+Serif+SC:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg:#f7f5f0;--paper:#faf9f6;--ink:#1c1c1c;--warm:#e8e0d5;
+    --red:#8b2020;--light:#ede8e0;--shadow:rgba(0,0,0,.06);
+  }
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:'Noto Serif SC',serif;overflow-x:hidden;cursor:none}
+  a,button{cursor:none}
+
+  /* CURSOR */
+  .cursor-ring{position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:left .08s ease-out,top .08s ease-out}
+  .cursor-dot{position:fixed;pointer-events:none;z-index:10000;transform:translate(-50%,-50%);width:6px;height:6px;border-radius:50%;background:#c9a84c;transition:left .03s,top .03s}
+
+  /* NAV */
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(247,245,240,.95);backdrop-filter:blur(8px)}
+  .nav-inner{max-width:1100px;margin:0 auto;padding:20px 48px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--warm)}
+  .nav-logo{display:flex;align-items:baseline;gap:12px}
+  .nav-logo-jp{font-size:22px;font-weight:600;letter-spacing:.08em;font-family:'Shippori Mincho',serif}
+  .nav-logo-en{font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;color:#888;letter-spacing:.08em}
+  .nav-links{display:flex;gap:40px;font-family:'Shippori Mincho',serif;font-size:14px;letter-spacing:.1em}
+  .nav-links a{color:#888;text-decoration:none;transition:color .3s;position:relative}
+  .nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--red);transform:scaleX(0);transition:transform .3s;transform-origin:left}
+  .nav-links a:hover{color:var(--ink)}
+  .nav-links a:hover::after{transform:scaleX(1)}
+
+  /* HERO */
+  .hero{min-height:100vh;display:grid;grid-template-columns:1fr 380px;max-width:1100px;margin:0 auto;padding:80px 48px 80px;gap:80px;align-items:center}
+  .hero-left{}
+  .hero-jp{font-family:'Shippori Mincho',serif;font-size:11px;letter-spacing:.4em;color:var(--red);text-transform:uppercase;margin-bottom:40px;display:flex;align-items:center;gap:16px}
+  .hero-jp::before,.hero-jp::after{content:'';flex:1;max-width:30px;height:1px;background:var(--red)}
+  h1{font-family:'Shippori Mincho',serif;font-size:clamp(52px,7vw,96px);font-weight:500;line-height:1.1;letter-spacing:-.01em;color:var(--ink)}
+  h1 .sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.55em;color:#999;display:block;margin-top:8px;font-weight:300;letter-spacing:.04em}
+  .hero-body{margin-top:40px;max-width:400px}
+  .hero-body p{font-size:16px;line-height:2.2;color:#666;font-weight:300}
+  .hero-divider{margin:32px 0;border:none;border-top:1px solid var(--warm)}
+  .hero-stats{display:flex;gap:40px}
+  .hstat{display:flex;flex-direction:column;align-items:center;gap:4px}
+  .hstat-num{font-family:'Cormorant Garamond',serif;font-size:44px;color:var(--ink);font-weight:300;line-height:1}
+  .hstat-label{font-size:10px;letter-spacing:.25em;color:#aaa;text-transform:uppercase;font-family:'DM Mono',monospace}
+
+  .hero-right{display:flex;flex-direction:column;gap:0}
+  .sidebar-card{border:1px solid var(--warm);background:var(--paper);overflow:hidden;position:relative}
+  .sidebar-card+.sidebar-card{border-top:none}
+  .sc-thumb{aspect-ratio:4/3;background:var(--light);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:28px;color:#c9a84c;transition:background .4s}
+  .sidebar-card:hover .sc-thumb{background:var(--warm)}
+  .sc-body{padding:16px 20px}
+  .sc-label{font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--red);font-family:'Noto Serif SC',serif;margin-bottom:6px}
+  .sc-title{font-size:15px;font-family:'Shippori Mincho',serif;color:var(--ink)}
+
+  /* SECTION DIVIDER */
+  .sec-divider{max-width:1100px;margin:0 auto;padding:0 48px 60px;display:flex;align-items:center;gap:24px}
+  .sd-kanji{font-family:'Shippori Mincho',serif;font-size:64px;font-weight:500;color:var(--light);line-height:1}
+  .sd-text{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:#bbb}
+  .sd-line{flex:1;height:1px;background:var(--warm)}
+
+  /* GRID */
+  .section{max-width:1100px;margin:0 auto;padding:0 48px 100px}
+  .work-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .work-card{background:var(--paper);overflow:hidden;position:relative;transition:transform .4s,box-shadow .4s}
+  .work-card:hover{transform:translateY(-6px);box-shadow:0 20px 60px var(--shadow)}
+  .wc-thumb{aspect-ratio:4/3;background:var(--light);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:36px;color:#c9a84c;transition:background .4s,color .4s;position:relative;overflow:hidden}
+  .work-card:hover .wc-thumb{background:var(--ink);color:rgba(255,255,255,.15)}
+  .wc-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:.4s}
+  .work-card:hover .wc-overlay{opacity:1}
+  .wc-play{width:48px;height:48px;border:1px solid rgba(255,255,255,.6);border-radius:50%;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.8);font-size:14px}
+  .wc-body{padding:20px}
+  .wc-type{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--red);margin-bottom:8px}
+  .wc-title{font-family:'Shippori Mincho',serif;font-size:16px;line-height:1.5;color:var(--ink)}
+  .wc-year{position:absolute;top:12px;right:14px;font-family:'DM Mono',monospace;font-size:9px;color:#ccc;letter-spacing:.1em}
+
+  /* LARGE FEATURED */
+  .featured{display:grid;grid-template-columns:2fr 1fr;gap:24px;margin-bottom:24px}
+  .work-card.large .wc-thumb{aspect-ratio:16/9}
+
+  /* SITES */
+  .site-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--warm)}
+  .site-entry{padding:48px;border-right:1px solid var(--warm);position:relative}
+  .site-entry:last-child{border:none}
+  .site-entry::before{content:'';position:absolute;top:0;left:0;width:3px;height:0;background:var(--red);transition:height .4s}
+  .site-entry:hover::before{height:100%}
+  .site-en{font-family:'Cormorant Garamond',serif;font-size:64px;color:#c9a84c;line-height:1;margin-bottom:12px}
+  .site-title{font-family:'Shippori Mincho',serif;font-size:20px;margin-bottom:12px}
+  .site-desc{font-size:13px;line-height:2;color:#888;font-weight:300}
+  .site-link{margin-top:24px;display:inline-flex;align-items:center;gap:8px;font-size:16px;font-family:'Noto Serif SC',serif;color:var(--red);text-decoration:none;letter-spacing:.1em}
+
+  /* FOOTER */
+  .footer-wrap{border-top:1px solid var(--warm);padding:48px;display:flex;justify-content:space-between;align-items:center;max-width:1100px;margin:0 auto}
+  .footer-brand{font-family:'Shippori Mincho',serif;font-size:22px;letter-spacing:.05em}
+  .footer-copy{font-family:'DM Mono',monospace;font-size:10px;color:#bbb;letter-spacing:.15em}
+  footer{border-top:1px solid var(--warm)}
+
+  @media(max-width:900px){
+    .hero{grid-template-columns:1fr;padding:100px 24px 60px}
+    .hero-right{display:none}
+    .work-grid,.featured{grid-template-columns:1fr 1fr}
+    .site-grid{grid-template-columns:1fr}
+    .site-entry{border-right:none;border-bottom:1px solid var(--warm)}
+    .section,.sec-divider,.footer-wrap{padding-left:24px;padding-right:24px}
+    .nav-inner{padding:16px 24px}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">
+      <span class="nav-logo-jp">Portfolio</span>
+      <span class="nav-logo-en">Portfolio</span>
+    </div>
+    <div class="nav-links">
+      <a href="#works">Video creation</a>
+      <a href="#sites">Webpage creation</a>
+      <a href="#cms">Automated Content Management System</a>
+    </div>
+  </div>
+</nav>
+
+<div style="max-width:1100px;margin:0 auto">
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-jp">PERSONAL PORTFOLIO </div>
+    <h1>
+      ZHANG<br>XIAO
+      <span class="sub">AI Digital Media</span>
+    </h1>
+    <div class="hero-body">
+      <p>Video access password: z3311</p>
+      <p style="margin-top:1.4em;">I majored in Radio and Television Directing for my undergraduate degree, in Film and Television and New Media Production Management under Communication Studies for my first master's degree, and in Artificial Intelligence and Digital Media for my second master's degree. I have worked for two years in a TV station and one year in a cultural and tourism bureau.</p>
+    </div>
+  </div>
+  <div class="hero-right">
+    <a class="sidebar-card" href="https://v.youku.com/v_show/id_XNjUxODUwNzMwNA==.html" target="_blank" style="text-decoration:none"><div class="sc-thumb">McDonald’s</div><div class="sc-body"><div class="sc-label">Big Data and Social Media Marketing</div><div class="sc-title">McDonald’s</div></div></a>
+    <a class="sidebar-card" href="https://v.youku.com/v_show/id_XNjUxODUwNjMyOA==.html" target="_blank" style="text-decoration:none"><div class="sc-thumb">Webull</div><div class="sc-body"><div class="sc-label">Big Data and Social Media Marketing</div><div class="sc-title">Webull</div></div></a>
+    <a class="sidebar-card" href="https://v.youku.com/v_show/id_XNjUyNzAzODAyNA==.html" target="_blank" style="text-decoration:none"><div class="sc-thumb">Scott Café</div><div class="sc-body"><div class="sc-label">Big Data and Social Media Marketing</div><div class="sc-title">Scott Café</div></div></a>
+  </div>
+</section>
+</div>
+
+<div class="sec-divider">
+  <div class="sd-kanji">映</div>
+  <div class="sd-text">Video Works</div>
+  <div class="sd-line"></div>
+</div>
+
+<section class="section" id="works">
+  <div class="featured">
+    <a class="work-card large" href="https://v.youku.com/v_show/id_XNjUxODUwNTc2MA==.html" target="_blank" style="text-decoration:none;display:block"><div class="wc-thumb">Mo Xia Home Interior Video Advertisement<div class="wc-overlay"><div class="wc-play">▶</div></div></div><div class="wc-body"><div class="wc-type">VIDEO</div><div class="wc-title">Mo Xia Home Interior Video Advertisement</div><div style="margin-top:6px;font-family:'DM Mono',monospace;font-size:9px;color:#bbb;letter-spacing:.15em"></div></div></a>
+    <div style="display:grid;gap:24px">
+      <a class="work-card" href="https://v.youku.com/v_show/id_XNjUyNzAzNzk3Mg==.html" target="_blank" style="text-decoration:none;display:block"><div class="wc-thumb">Shenzhen Power Supply Bureau promotional video<div class="wc-overlay"><div class="wc-play">▶</div></div></div><div class="wc-body"><div class="wc-type">VIDEO</div><div class="wc-title">Shenzhen Power Supply Bureau promotional video</div></div></a>
+      <a class="work-card" href="https://v.youku.com/v_show/id_XNjUyNzAzOTQyOA==.html" target="_blank" style="text-decoration:none;display:block"><div class="wc-thumb">Special Case Unit 6<div class="wc-overlay"><div class="wc-play">▶</div></div></div><div class="wc-body"><div class="wc-type">VIDEO</div><div class="wc-title">Special Case Unit 6</div></div></a>
+    </div>
+  </div>
+  <div class="work-grid">
+    <a class="work-card" href="https://v.youku.com/v_show/id_XNjUxODUwNDIyOA==.html" target="_blank" style="text-decoration:none;display:block"><div class="wc-thumb">The Prophetic Paradox<div class="wc-overlay"><div class="wc-play">▶</div></div></div><div class="wc-body"><div class="wc-type">VIDEO</div><div class="wc-title">The Prophetic Paradox</div></div></a>
+  </div>
+</section>
+
+<div class="sec-divider">
+  <div class="sd-kanji">網</div>
+  <div class="sd-text">Web Projects</div>
+  <div class="sd-line"></div>
+</div>
+
+<section class="section" id="sites">
+  <div class="site-grid">
+    <div class="site-entry"><div class="site-en">%Arabica<br>01</div><div class="site-title">%Arabica</div><div class="site-desc">Static web page</div><a class="site-link" href="https://xiaozhang7272000-sketch.github.io/ZHANG-XIAO-Arabica/" target="_blank">Visit the website →</a></div>
+    <div class="site-entry"><div class="site-en">The Journey of Poetry<br>02</div><div class="site-title">The Journey of Poetry</div><div class="site-desc">Dynamic web page</div><a class="site-link" href="https://xiaozhang7272000-sketch.github.io/shici/" target="_blank">Visit the website →</a></div>
+  </div>
+</section>
+
+<div class="sec-divider">
+  <div class="sd-kanji">系</div>
+  <div class="sd-text">Automated CMS</div>
+  <div class="sd-line"></div>
+</div>
+
+<section class="section" id="cms">
+  <div class="site-grid" style="grid-template-columns:1fr">
+    <div class="site-entry" style="border:none;padding:48px 0">
+      <div class="site-en">Automated Content Management System<br></div>
+      <div class="site-title">Automated Content Management System for Screen Time of Indian Children</div>
+      <div class="site-desc">The urban-rural and age differences in screen usage among Indian children</div>
+      <a class="site-link" href="https://xiaozhang7272000-sketch.github.io/Indian-Children-Screen-Usage-Analysis/" target="_blank">Access system →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-wrap">
+    <div class="footer-brand">ZHANG XIAO · Portfolio</div>
+    <div class="footer-copy"></div>
+  </div>
+</footer>
+
+
+<div class="cursor-ring" id="cursorRing">
+  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="20" cy="20" r="18" stroke="#c9a84c" stroke-width="1.2" opacity="0.85"/>
+  </svg>
+</div>
+<div class="cursor-dot" id="cursorDot"></div>
+
+<script>
+  const ring = document.getElementById('cursorRing');
+  const dot = document.getElementById('cursorDot');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    dot.style.left = mx + 'px';
+    dot.style.top = my + 'px';
+  });
+
+  function animRing() {
+    rx += (mx - rx) * 0.10;
+    ry += (my - ry) * 0.10;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animRing);
+  }
+  animRing();
+
+  // Scale ring on hover over links/cards
+  document.querySelectorAll('a, .work-card, .sidebar-card, .site-entry').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      ring.style.transform = 'translate(-50%,-50%) scale(1.5)';
+      ring.style.opacity = '0.6';
+    });
+    el.addEventListener('mouseleave', () => {
+      ring.style.transform = 'translate(-50%,-50%) scale(1)';
+      ring.style.opacity = '1';
+    });
+  });
+</script>
+</body>
+</html>
